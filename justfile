@@ -37,5 +37,6 @@ unittest:
 	set -euo pipefail
 	source ./scripts/source/environment
 	log_info "Run unittests"
-	go test -v ./...
+	go test -v -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out -o coverage.html
 

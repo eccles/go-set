@@ -24,8 +24,8 @@ type (
 	Set[T comparable] map[T]struct{}
 )
 
-// NewSet creates a new set with optional input values.
-func NewSet[T comparable](values iter.Seq[T]) Set[T] {
+// FromIter creates a new set from an iterator.
+func FromIter[T comparable](values iter.Seq[T]) Set[T] {
 	s := make(map[T]struct{})
 
 	if values != nil {
@@ -37,12 +37,24 @@ func NewSet[T comparable](values iter.Seq[T]) Set[T] {
 	return s
 }
 
+// FromSlice creates a new set from a slice or array.
+func FromSlice[T comparable](values ...T) Set[T] {
+	s := make(map[T]struct{})
+
+	for _, value := range values {
+		s[value] = struct{}{}
+	}
+
+	return s
+}
+
 // Iter returns an terator over the set.
 func (s Set[T]) Iter() iter.Seq[T] {
 	return maps.Keys(s)
 }
 
 // List returns the set as the original array.
+// Order is not preserved.
 func (s Set[T]) List() []T {
 	result := make([]T, 0, len(s))
 
@@ -70,26 +82,43 @@ func (s Set[T]) Contains(value T) bool {
 	return c
 }
 
-// SymmetricDifference returns set that consists of items that are not in both
-// sets.
-func (s Set[T]) SymmetricDifference(other Set[T]) Set[T] {
-	return s.Difference(other).Union(other.Difference(s))
-}
-
-// SymmetricDifferenceIter returns set that consists of items that are not in
-// set and iterable.
-func (s Set[T]) SymmetricDifferenceIter(values iter.Seq[T]) Set[T] {
-	// Hmm - how to avoid the NewSet call?
-	return s.SymmetricDifference(NewSet(values))
-}
-
-// Difference returns set that consists of items that are in set and not in
-// second set.
-func (s Set[T]) Difference(other Set[T]) Set[T] {
-	result := NewSet[T](nil)
+// Union returns set that consists of items that are in either of the 2 sets.
+func (s Set[T]) Union(other Set[T]) Set[T] {
+	result := make(map[T]struct{})
 
 	for k := range s {
-		if !other.Contains(k) {
+		result[k] = struct{}{}
+	}
+
+	for k := range other {
+		result[k] = struct{}{}
+	}
+
+	return result
+}
+
+// UnionList returns set that consists of items that are in either the set or
+// the iterable.
+func (s Set[T]) UnionIter(values iter.Seq[T]) Set[T] {
+	result := make(map[T]struct{})
+
+	for k := range s {
+		result[k] = struct{}{}
+	}
+
+	for k := range values {
+		result[k] = struct{}{}
+	}
+
+	return result
+}
+
+// Intersection returns set that consists of items that are in both sets.
+func (s Set[T]) Intersection(other Set[T]) Set[T] {
+	result := make(map[T]struct{})
+
+	for k := range other {
+		if s.Contains(k) {
 			result[k] = struct{}{}
 		}
 	}
@@ -97,22 +126,10 @@ func (s Set[T]) Difference(other Set[T]) Set[T] {
 	return result
 }
 
-// DifferenceIter returns set that consists of items that are in set and not
-// in iterable.
-func (s Set[T]) DifferenceIter(values iter.Seq[T]) Set[T] {
-	// Hmm - how to avoid the NewSet call?
-	return s.Difference(NewSet[T](values))
-}
-
-// Intersection returns set that consists of items that are in both sets.
-func (s Set[T]) Intersection(other Set[T]) Set[T] {
-	return s.IntersectionIter(other.Iter())
-}
-
 // IntersectionIter returns set that consists of items that are in both set
 // and iterable.
 func (s Set[T]) IntersectionIter(values iter.Seq[T]) Set[T] {
-	result := NewSet[T](nil)
+	result := make(map[T]struct{})
 
 	for k := range values {
 		if s.Contains(k) {
@@ -123,23 +140,25 @@ func (s Set[T]) IntersectionIter(values iter.Seq[T]) Set[T] {
 	return result
 }
 
-// Union returns set that consists of items that are in either of the 2 sets.
-func (s Set[T]) Union(other Set[T]) Set[T] {
-	return s.UnionIter(maps.Keys(other))
-}
-
-// UnionList returns set that consists of items that are in either the set or
-// the iterable.
-func (s Set[T]) UnionIter(values iter.Seq[T]) Set[T] {
-	result := NewSet[T](nil)
+// Difference returns set that consists of items that are in set and not in
+// second set.
+func (s Set[T]) Difference(other Set[T]) Set[T] {
+	result := make(map[T]struct{})
 
 	for k := range s {
-		result[k] = struct{}{}
-	}
-
-	for k := range values {
-		result[k] = struct{}{}
+		if !other.Contains(k) {
+			result[k] = struct{}{}
+		}
 	}
 
 	return result
+}
+
+// SymmetricDifference returns set that consists of items that are not in both
+// sets.
+func (s Set[T]) SymmetricDifference(other Set[T]) Set[T] {
+	d := s.Difference(other)
+	e := other.Difference(s)
+
+	return d.Union(e)
 }
