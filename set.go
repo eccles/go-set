@@ -21,6 +21,7 @@ import (
 )
 
 type (
+	// Set is a synonym of a map.
 	Set[T comparable] map[T]struct{}
 )
 
@@ -71,8 +72,10 @@ func (s Set[T]) Add(value T) {
 }
 
 // Remove removes items from a set.
-func (s Set[T]) Remove(value T) {
-	delete(s, value)
+func (s Set[T]) Remove(values ...T) {
+	for _, value := range values {
+		delete(s, value)
+	}
 }
 
 // Contains returns true if item is present in the set.
@@ -97,7 +100,7 @@ func (s Set[T]) Union(other Set[T]) Set[T] {
 	return result
 }
 
-// UnionList returns set that consists of items that are in either the set or
+// UnionIter returns set that consists of items that are in either the set or
 // the iterable.
 func (s Set[T]) UnionIter(values iter.Seq[T]) Set[T] {
 	result := make(map[T]struct{})
@@ -140,8 +143,8 @@ func (s Set[T]) IntersectionIter(values iter.Seq[T]) Set[T] {
 	return result
 }
 
-// Difference returns set that consists of items that are in set and not in
-// second set.
+// Difference returns set that consists of items that are in first set and
+// not in second set.
 func (s Set[T]) Difference(other Set[T]) Set[T] {
 	result := make(map[T]struct{})
 
@@ -154,11 +157,22 @@ func (s Set[T]) Difference(other Set[T]) Set[T] {
 	return result
 }
 
-// SymmetricDifference returns set that consists of items that are not in both
-// sets.
+// SymmetricDifference returns set that consists of items that are in each set
+// but not in both sets.
 func (s Set[T]) SymmetricDifference(other Set[T]) Set[T] {
-	d := s.Difference(other)
-	e := other.Difference(s)
+	result := make(map[T]struct{})
 
-	return d.Union(e)
+	for k := range s {
+		if !other.Contains(k) {
+			result[k] = struct{}{}
+		}
+	}
+
+	for k := range other {
+		if !s.Contains(k) {
+			result[k] = struct{}{}
+		}
+	}
+
+	return result
 }

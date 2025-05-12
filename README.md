@@ -1,20 +1,9 @@
 # go-set
 Generic set for Golang
 
-# Selection set
+Loosely based on the python3 sets operations using generics and iterators.
 
-Sets are useful when implementing filtering. This is usually done 
-by the intersection of a selection set and a target object. The intersection 
-only returns the attributes of the target object specified in the selection set.
+Uses a map as a synonym of of a set. Members of a set must be comparable. 
+Unfortunately this precludes a 'Set of sets' as maps (on which Sets are based) are not comparable.
 
-Using the sets class from python3 as an example:
 
-```go
-```
-
-# Deselection set
-
-The opposite case is redact all fields that are not selected:
-
-```go
-```

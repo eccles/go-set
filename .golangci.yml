@@ -1503,7 +1503,7 @@ linters:
           severity: warning
           disabled: false
           exclude: [""]
-          arguments: [ 3 ]
+          arguments: [ 5 ]
         # https://github.com/mgechev/revive/blob/HEAD/RULES_DESCRIPTIONS.md#datarace
         - name: datarace
           severity: warning
@@ -1624,7 +1624,7 @@ linters:
           disabled: false
           exclude: [""]
           arguments:
-            - max: 100
+            - max: 120
               skip-comments: true
               skip-blank-lines: true
         # https://github.com/mgechev/revive/blob/HEAD/RULES_DESCRIPTIONS.md#filename-format
