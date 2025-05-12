@@ -13,6 +13,7 @@ tools:
 	log_info "Install go tools"
 	go get -modfile=go.tool.mod -tool golang.org/x/tools/cmd/goimports
 	go get -modfile=go.tool.mod -tool golang.org/x/tools/cmd/stringer
+	go get -modfile=go.tool.mod -tool golang.org/x/pkgsite/cmd/pkgsite
 	go install -modfile=go.tool.mod tool
 
 # QA all code
@@ -39,4 +40,12 @@ unittest:
 	log_info "Run unittests"
 	go test -v -coverprofile=coverage.out ./...
 	go tool cover -html=coverage.out -o coverage.html
+
+# generate documentation server
+doc:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	source ./scripts/source/environment
+	log_info "Run documentation server at localhost:8080"
+	go tool -modfile=go.tool.mod pkgsite
 
