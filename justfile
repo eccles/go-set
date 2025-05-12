@@ -11,9 +11,9 @@ tools:
 	set -euo pipefail
 	source ./scripts/source/environment
 	log_info "Install go tools"
-	go get -tool golang.org/x/tools/cmd/goimports
-	go get -tool golang.org/x/tools/cmd/stringer
-	go install tool
+	go get -modfile=go.tool.mod -tool golang.org/x/tools/cmd/goimports
+	go get -modfile=go.tool.mod -tool golang.org/x/tools/cmd/stringer
+	go install -modfile=go.tool.mod tool
 
 # QA all code
 qa:
@@ -24,7 +24,7 @@ qa:
 	go mod tidy
 	go mod verify
 	log_info "Format code"
-	go tool goimports -w .
+	go tool -modfile=go.tool.mod goimports -w .
 	gofmt -l -s -w $(find . -type f -name '*.go'| grep -v "/vendor/\|/.git/")
 	log_info "Linting"
 	golangci-lint run -v

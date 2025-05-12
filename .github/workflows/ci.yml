@@ -27,6 +27,10 @@ jobs:
       - name: qa
         run: just qa
         shell: bash
-      - name: unittests
+      - name: Check if changed
+        run: |
+          git diff
+        shell: bash
+      - name: unittest
         run: just unittest
         shell: bash
