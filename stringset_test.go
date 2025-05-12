@@ -10,15 +10,15 @@ import (
 
 // nolint: gochecknoglobals // these are constants in a test package
 var (
-	inputSet            = FromSlice([]string{"a1", "a2", "a2"}...)
-	inputMap            = map[string]string{"a1": "", "a2": ""}
-	inputList           = []string{"a2", "a3", "a2"}
-	outputList1         = []string{"a1", "a2"}
-	outputList2         = []string{"a2", "a3"}
+	inputSet            = FromSlice([]string{"a1", "a2", "a2", "a4", "a5"}...)
+	inputMap            = map[string]string{"a1": "", "a2": "", "a6": ""}
+	inputList           = []string{"a2", "a3", "a2", "a7"}
+	outputList1         = []string{"a1", "a2", "a6"}
+	outputList2         = []string{"a2", "a3", "a7"}
 	intersection        = []string{"a2"}
-	union               = []string{"a1", "a2", "a3"}
-	difference          = []string{"a1"}
-	symmetricDifference = []string{"a1", "a3"}
+	union               = []string{"a1", "a2", "a3", "a4", "a5", "a7"}
+	difference          = []string{"a1", "a4", "a5"}
+	symmetricDifference = []string{"a1", "a3", "a4", "a5", "a7"}
 )
 
 // TestCreationListAddRemove tests simple additon and removal of fields.
