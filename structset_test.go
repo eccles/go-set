@@ -4,8 +4,6 @@ import (
 	"maps"
 	"slices"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 // this struct is comparable because all its fields are comparable.
@@ -37,27 +35,27 @@ var (
 // TestStructCreationListAddRemove tests simple additon and removal of fields.
 func TestStructCreationListAddRemove(t *testing.T) {
 	s := FromSlice(structinputList...)
-	assert.ElementsMatch(t, structoutputList2, s.List())
+	assertElementsMatch(t, structoutputList2, s.List())
 
 	// add something that already exists
-	assert.Equal(t, true, s.Contains(threeStruct))
+	assertSetContains(t, s, threeStruct)
 	s.Add(threeStruct)
-	assert.Equal(t, true, s.Contains(threeStruct))
+	assertSetContains(t, s, threeStruct)
 
 	// add something that doe not exist
-	assert.Equal(t, false, s.Contains(fourStruct))
+	assertSetNotContains(t, s, fourStruct)
 	s.Add(fourStruct)
-	assert.Equal(t, true, s.Contains(fourStruct))
+	assertSetContains(t, s, fourStruct)
 
 	// delete something that does not exist
-	assert.Equal(t, false, s.Contains(fiveStruct))
+	assertSetNotContains(t, s, fiveStruct)
 	s.Remove(fiveStruct)
-	assert.Equal(t, false, s.Contains(fiveStruct))
+	assertSetNotContains(t, s, fiveStruct)
 
 	// delete something that does exist
-	assert.Equal(t, true, s.Contains(twoStruct))
+	assertSetContains(t, s, twoStruct)
 	s.Remove(twoStruct)
-	assert.Equal(t, false, s.Contains(twoStruct))
+	assertSetNotContains(t, s, twoStruct)
 }
 
 // TestStructIter tests the returned iterator.
@@ -66,24 +64,24 @@ func TestStructIter(t *testing.T) {
 	for k := range s.Iter() {
 		s.Remove(k)
 	}
-	assert.Len(t, s, 0)
+	assertLen(t, s, 0)
 }
 
 // TestStructCreationMap tests creation from map using iterator.
 func TestStructCreationMap(t *testing.T) {
 	s := FromIter(maps.Keys(structinputMap))
-	assert.ElementsMatch(t, structoutputList1, s.List())
+	assertElementsMatch(t, structoutputList1, s.List())
 }
 
 // TestStructIntersection tests intersection of 2 sets.
 func TestStructIntersection(t *testing.T) {
 	s2 := FromSlice(structinputList...)
-	assert.ElementsMatch(t, structintersection, structinputSet.Intersection(s2).List())
+	assertElementsMatch(t, structintersection, structinputSet.Intersection(s2).List())
 }
 
 // TestStructIntersectionIter tests intersection of set and iterable.
 func TestStructIntersectionIter(t *testing.T) {
-	assert.ElementsMatch(
+	assertElementsMatch(
 		t,
 		structintersection,
 		structinputSet.IntersectionIter(slices.Values(structinputList)).List(),
@@ -93,12 +91,12 @@ func TestStructIntersectionIter(t *testing.T) {
 // TestStructUnion tests union of 2 sets.
 func TestStructUnion(t *testing.T) {
 	s2 := FromSlice(structinputList...)
-	assert.ElementsMatch(t, structunion, structinputSet.Union(s2).List())
+	assertElementsMatch(t, structunion, structinputSet.Union(s2).List())
 }
 
 // TestStructUnionIter tests union of a set and a iterable.
 func TestStructUnionIter(t *testing.T) {
-	assert.ElementsMatch(
+	assertElementsMatch(
 		t,
 		structunion,
 		structinputSet.UnionIter(slices.Values(structinputList)).List(),
@@ -108,11 +106,11 @@ func TestStructUnionIter(t *testing.T) {
 // TestStructDifference tests difference of 2 sets.
 func TestStructDifference(t *testing.T) {
 	s2 := FromSlice(structinputList...)
-	assert.ElementsMatch(t, structdifference, structinputSet.Difference(s2).List())
+	assertElementsMatch(t, structdifference, structinputSet.Difference(s2).List())
 }
 
 // TestStructSymmetricDifference tests symmetric difference of 2 sets.
 func TestStructSymmetricDifference(t *testing.T) {
 	s2 := FromSlice(structinputList...)
-	assert.ElementsMatch(t, structsymmetricDifference, structinputSet.SymmetricDifference(s2).List())
+	assertElementsMatch(t, structsymmetricDifference, structinputSet.SymmetricDifference(s2).List())
 }
