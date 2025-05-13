@@ -11,10 +11,10 @@ tools:
 	set -euo pipefail
 	source ./scripts/source/environment
 	log_info "Install go tools"
-	go get -modfile=go.tool.mod -tool golang.org/x/tools/cmd/goimports
-	go get -modfile=go.tool.mod -tool golang.org/x/tools/cmd/stringer
-	go get -modfile=go.tool.mod -tool golang.org/x/pkgsite/cmd/pkgsite
-	go install -modfile=go.tool.mod tool
+	go get -modfile=tools/go.mod -tool golang.org/x/tools/cmd/goimports
+	go get -modfile=tools/go.mod -tool golang.org/x/tools/cmd/stringer
+	go get -modfile=tools/go.mod -tool golang.org/x/pkgsite/cmd/pkgsite
+	go install -modfile=tools/go.mod tool
 
 # QA all code
 qa:
@@ -24,8 +24,9 @@ qa:
 	log_info "Check go.mod and lint code"
 	go mod tidy
 	go mod verify
+	(cd tools && go mod tidy && go mod verify)
 	log_info "Format code"
-	go tool -modfile=go.tool.mod goimports -w .
+	go tool -modfile=tools/go.mod goimports -w .
 	gofmt -l -s -w $(find . -type f -name '*.go'| grep -v "/vendor/\|/.git/")
 	log_info "Vetting"
 	go vet ./...
@@ -49,5 +50,5 @@ doc:
 	set -euo pipefail
 	source ./scripts/source/environment
 	log_info "Run documentation server at localhost:8080"
-	go tool -modfile=go.tool.mod pkgsite
+	go tool -modfile=tools/go.mod pkgsite
 
