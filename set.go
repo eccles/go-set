@@ -16,8 +16,10 @@
 package set
 
 import (
+	"fmt"
 	"iter"
 	"maps"
+	"strings"
 )
 
 type (
@@ -49,7 +51,20 @@ func FromSlice[T comparable](values ...T) Set[T] {
 	return s
 }
 
-// Iter returns an terator over the set.
+// String returns a string representation of a set.
+func (s Set[T]) String() string {
+	var b strings.Builder
+
+	b.WriteString("set")
+
+	for k := range s {
+		fmt.Fprintf(&b, " %v", k)
+	}
+
+	return b.String()
+}
+
+// Iter returns an iterator over the set.
 func (s Set[T]) Iter() iter.Seq[T] {
 	return maps.Keys(s)
 }

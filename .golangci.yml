@@ -181,6 +181,7 @@ linters:
         - io/ioutil.ReadFile
         - io.Copy(*bytes.Buffer)
         - io.Copy(os.Stdout)
+        - (*strings.Builder).WriteString
 
     errchkjson:
       # With check-error-free-encoding set to true, errchkjson does warn about errors
