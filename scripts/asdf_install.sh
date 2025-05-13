@@ -1,4 +1,4 @@
-for p in golang golangci-lint mockery bats shellcheck shfmt just
+for p in golang golangci-lint just
 do
 	asdf plugin add $p
 	asdf install $p latest
