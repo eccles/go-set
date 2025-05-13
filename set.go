@@ -13,6 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package set implements a Set using an underlying map as an aliased type.
+//
+// Additionally the Set implements methods from the python set type including
+// unions, intersections, differences and symmetric differences.
+//
+// Data can be fed to a set from an array or slice and additionally from an
+// iterator. The implementation avoids allocations where possible.
+//
+// Unlike python sets can only consist of comparable types. This eliminates the
+// possibility of a 'set of sets'. The API is stable.
+//
+// Similarly to map, sets are not goroutine safe.
+//
+// [Python Set]: https://docs.python.org/3/library/stdtypes.html#set-types-set-frozenset
+// Frozenset is NOT supported.
 package set
 
 import (
@@ -27,7 +42,17 @@ type (
 	Set[T comparable] map[T]struct{}
 )
 
-// FromIter creates a new set from an iterator.
+// FromIter creates a new set from an iterator. This is useful for creating
+// a set from a map viz:
+//
+//	import (
+//	    "maps"
+//	    "github.com/eccles/go-set"
+//	)
+//
+//	m := map{"a": 0, "b", 1}
+//	s := go-set.FromIter(maps.Keys(m))
+//	fmt.Printf("Set is %v", s) // "set a b"
 func FromIter[T comparable](values iter.Seq[T]) Set[T] {
 	s := make(map[T]struct{})
 
@@ -41,6 +66,14 @@ func FromIter[T comparable](values iter.Seq[T]) Set[T] {
 }
 
 // FromSlice creates a new set from a slice or array.
+//
+//	import (
+//	    "github.com/eccles/go-set"
+//	)
+//
+//	a := []string{"a", "b"}
+//	s := go-set.FromSlice(a)
+//	fmt.Printf("Set is %v", s) // "set a b"
 func FromSlice[T comparable](values ...T) Set[T] {
 	s := make(map[T]struct{})
 
@@ -101,6 +134,16 @@ func (s Set[T]) Contains(value T) bool {
 }
 
 // Union returns set that consists of items that are in either of the 2 sets.
+//
+//	import (
+//	    "github.com/eccles/go-set"
+//	)
+//
+//	a := []string{"a", "b", "c"}
+//	m := []string{"c", "d", "e"}
+//	s := go-set.FromSlice(a)
+//	u := s.Union(m)
+//	fmt.Printf("Union is %v", u) // "set a b c d e"
 func (s Set[T]) Union(other Set[T]) Set[T] {
 	result := make(map[T]struct{})
 
@@ -116,7 +159,18 @@ func (s Set[T]) Union(other Set[T]) Set[T] {
 }
 
 // UnionIter returns set that consists of items that are in either the set or
-// the iterable.
+// the iterable:
+//
+//	import (
+//	    "maps"
+//	    "github.com/eccles/go-set"
+//	)
+//
+//	a := []string{"a", "b", "c"}
+//	m := map{"c": 0, "d", 1, "e", 2}
+//	s := go-set.FromSlice(a)
+//	u := s.UnionIter(maps.Keys(m))
+//	fmt.Printf("Union is %v", u) // "set a b c d e"
 func (s Set[T]) UnionIter(values iter.Seq[T]) Set[T] {
 	result := make(map[T]struct{})
 
@@ -132,6 +186,16 @@ func (s Set[T]) UnionIter(values iter.Seq[T]) Set[T] {
 }
 
 // Intersection returns set that consists of items that are in both sets.
+//
+//	import (
+//	    "github.com/eccles/go-set"
+//	)
+//
+//	a := []string{"a", "b", "c"}
+//	m := []string{"c", "d", "e"}
+//	s := go-set.FromSlice(a)
+//	u := s.Intersection(m)
+//	fmt.Printf("Intersection is %v", u) // "set c"
 func (s Set[T]) Intersection(other Set[T]) Set[T] {
 	result := make(map[T]struct{})
 
@@ -146,6 +210,17 @@ func (s Set[T]) Intersection(other Set[T]) Set[T] {
 
 // IntersectionIter returns set that consists of items that are in both set
 // and iterable.
+//
+//		import (
+//	        "maps"
+//		    "github.com/eccles/go-set"
+//		)
+//
+//		a := []string{"a", "b", "c"}
+//		m := map{"c": 0, "d", 1, "e": 2}
+//		s := go-set.FromSlice(a)
+//		u := s.IntersectionIter(maps.Key(m))
+//		fmt.Printf("Intersection is %v", u) // "set c"
 func (s Set[T]) IntersectionIter(values iter.Seq[T]) Set[T] {
 	result := make(map[T]struct{})
 
@@ -160,6 +235,16 @@ func (s Set[T]) IntersectionIter(values iter.Seq[T]) Set[T] {
 
 // Difference returns set that consists of items that are in first set and
 // not in second set.
+//
+//	import (
+//	    "github.com/eccles/go-set"
+//	)
+//
+//	a := []string{"a", "b", "c"}
+//	m := []string{"c", "d", "e"}
+//	s := go-set.FromSlice(a)
+//	u := s.Difference(m)
+//	fmt.Printf("Difference is %v", u) // "set a b"
 func (s Set[T]) Difference(other Set[T]) Set[T] {
 	result := make(map[T]struct{})
 
@@ -174,6 +259,16 @@ func (s Set[T]) Difference(other Set[T]) Set[T] {
 
 // SymmetricDifference returns set that consists of items that are in each set
 // but not in both sets.
+//
+//	import (
+//	    "github.com/eccles/go-set"
+//	)
+//
+//	a := []string{"a", "b", "c"}
+//	m := []string{"c", "d", "e"}
+//	s := go-set.FromSlice(a)
+//	u := s.SymmetricDifference(m)
+//	fmt.Printf("SymmetricDifference is %v", u) // "set a b d e"
 func (s Set[T]) SymmetricDifference(other Set[T]) Set[T] {
 	result := make(map[T]struct{})
 
