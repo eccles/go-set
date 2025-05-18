@@ -15,7 +15,7 @@ require (
 	github.com/google/safehtml v0.0.3-0.20211026203422-d6f0e11a5516 // indirect
 	golang.org/x/mod v0.24.0 // indirect
 	golang.org/x/net v0.40.0 // indirect
-	golang.org/x/pkgsite v0.0.0-20250508150449-e476b3e60948 // indirect
+	golang.org/x/pkgsite v0.0.0-20250513170134-ef1cfc531f53 // indirect
 	golang.org/x/sync v0.14.0 // indirect
 	golang.org/x/text v0.25.0 // indirect
 	golang.org/x/tools v0.33.0 // indirect
