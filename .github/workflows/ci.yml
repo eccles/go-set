@@ -34,3 +34,6 @@ jobs:
       - name: unittest
         run: just unittest
         shell: bash
+      - name: benchmark
+        run: just benchmark
+        shell: bash

@@ -44,6 +44,14 @@ unittest:
 	go test -v -coverprofile=coverage.out ./...
 	go tool cover -html=coverage.out -o coverage.html
 
+# benchmark all code
+benchmark:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	source ./scripts/source/environment
+	log_info "Run benchmarks"
+	go test -bench=. ./...
+
 # generate documentation server
 doc:
 	#!/usr/bin/env bash
