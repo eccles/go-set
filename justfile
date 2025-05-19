@@ -11,6 +11,7 @@ tools:
 	set -euo pipefail
 	source ./scripts/source/environment
 	log_info "Install go tools"
+	which go
 	go get -modfile=tools/go.mod -tool golang.org/x/tools/cmd/goimports
 	go get -modfile=tools/go.mod -tool golang.org/x/tools/cmd/stringer
 	go get -modfile=tools/go.mod -tool golang.org/x/pkgsite/cmd/pkgsite
@@ -23,6 +24,7 @@ qa:
 	set -euo pipefail
 	source ./scripts/source/environment
 	log_info "Check go.mod and lint code"
+	which go
 	go mod tidy
 	go mod verify
 	(cd tools && go mod tidy && go mod verify)
@@ -42,6 +44,7 @@ unittest:
 	set -euo pipefail
 	source ./scripts/source/environment
 	log_info "Run unittests"
+	which go
 	go test -v -coverprofile=coverage.out ./...
 	go tool cover -html=coverage.out -o coverage.html
 
@@ -51,8 +54,10 @@ benchmark:
 	set -euo pipefail
 	source ./scripts/source/environment
 	log_info "Run benchmarks"
+	which go
+	rm -f benchmark-new.txt
 	go test -bench=. -benchmem ./... | tee benchmark-new.txt
-	go tool -modfile=tools/go.mod benchstat benchmark-new.txt benchmark.txt
+	go tool -modfile=tools/go.mod benchstat benchmark.txt benchmark-new.txt
 
 # generate documentation server
 doc:
@@ -60,5 +65,6 @@ doc:
 	set -euo pipefail
 	source ./scripts/source/environment
 	log_info "Run documentation server at localhost:8080"
+	which go
 	go tool -modfile=tools/go.mod pkgsite
 
