@@ -14,6 +14,7 @@ tools:
 	go get -modfile=tools/go.mod -tool golang.org/x/tools/cmd/goimports
 	go get -modfile=tools/go.mod -tool golang.org/x/tools/cmd/stringer
 	go get -modfile=tools/go.mod -tool golang.org/x/pkgsite/cmd/pkgsite
+	go get -modfile=tools/go.mod -tool golang.org/x/perf/cmd/benchstat
 	go install -modfile=tools/go.mod tool
 
 # QA all code
@@ -50,7 +51,8 @@ benchmark:
 	set -euo pipefail
 	source ./scripts/source/environment
 	log_info "Run benchmarks"
-	go test -bench=. ./...
+	go test -bench=. -benchmem ./... | tee benchmark-new.txt
+	go tool -modfile=tools/go.mod benchstat benchmark-new.txt benchmark.txt
 
 # generate documentation server
 doc:

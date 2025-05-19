@@ -28,3 +28,6 @@ go.work.sum
 # miscellaneous additions
 .bash_history
 version.txt
+
+# benchmarking
+benchmark-new.txt
