@@ -91,8 +91,7 @@ func (s Set[T]) Iter() iter.Seq[T] {
 }
 
 // List returns the set as the original array.
-// Order is not preserved but the list is returned in
-// ascending order.
+// Order is not preserved.
 func (s Set[T]) List() []T {
 	result := make([]T, 0, len(s))
 
