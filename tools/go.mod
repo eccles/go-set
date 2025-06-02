@@ -18,7 +18,7 @@ require (
 	golang.org/x/mod v0.24.0 // indirect
 	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/perf v0.0.0-20250515181355-8f5f3abfb71a // indirect
-	golang.org/x/pkgsite v0.0.0-20250513170134-ef1cfc531f53 // indirect
+	golang.org/x/pkgsite v0.0.0-20250530215610-4d41929ccc35 // indirect
 	golang.org/x/sync v0.14.0 // indirect
 	golang.org/x/text v0.25.0 // indirect
 	golang.org/x/tools v0.33.0 // indirect

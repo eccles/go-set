@@ -30,4 +30,5 @@ go.work.sum
 version.txt
 
 # benchmarking
+benchmark.txt
 benchmark-new.txt

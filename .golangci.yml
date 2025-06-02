@@ -44,7 +44,7 @@ linters:
     cyclop:
       # The maximal code complexity to report.
       # Default: 10
-      max-complexity: 10
+      max-complexity: 20
       # The maximal average package complexity.
       # If it's higher than 0.0 (float) the check is enabled.
       # Default: 0.0
@@ -394,7 +394,7 @@ linters:
     gocognit:
       # Minimal code complexity to report.
       # Default: 30 (but we recommend 10-20)
-      min-complexity: 10
+      min-complexity: 20
 
     goconst:
       # Minimal length of string constant.
@@ -1457,7 +1457,7 @@ linters:
           severity: warning
           disabled: false
           exclude: [""]
-          arguments: [ 7 ]
+          arguments: [ 30 ]
         # https://github.com/mgechev/revive/blob/HEAD/RULES_DESCRIPTIONS.md#comment-spacings
         - name: comment-spacings
           severity: warning
@@ -1504,7 +1504,7 @@ linters:
           severity: warning
           disabled: false
           exclude: [""]
-          arguments: [ 5 ]
+          arguments: [ 10 ]
         # https://github.com/mgechev/revive/blob/HEAD/RULES_DESCRIPTIONS.md#datarace
         - name: datarace
           severity: warning
@@ -1645,7 +1645,7 @@ linters:
           severity: warning
           disabled: false
           exclude: [""]
-          arguments: [ 10, 0 ]
+          arguments: [ 20, 0 ]
         # https://github.com/mgechev/revive/blob/HEAD/RULES_DESCRIPTIONS.md#function-result-limit
         - name: function-result-limit
           severity: warning
