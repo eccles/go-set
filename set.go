@@ -21,16 +21,25 @@
 // Data can be fed to a set from an array or slice and additionally from an
 // iterator. The implementation avoids allocations where possible.
 //
-// Unlike python sets can only consist of comparable types. This eliminates the
+// Unlike python, sets can only consist of comparable types. This eliminates the
 // possibility of a 'set of sets'. The API is stable.
 //
 // Similarly to map, sets are not goroutine safe.
 //
 // This is not production code but simply a demonstration of generics and iterators.
-// Import at own risk.
+// Do not import.
 //
 // [Python Set]: https://docs.python.org/3/library/stdtypes.html#set-types-set-frozenset
-// Frozenset is NOT supported.
+// Frozenset is NOT supported although it would be possible.
+//
+// This implementation using generics has a few problems. Map keys or sets are
+// 'comparable' (obeys the == and != operations) whereas slices are 'cmp.Ordered'
+// (obeys <, <=, ==, >=, > operations) and this introduces some basic incompatibilities.
+// Attempting to sort a set using slices.Sort from the go slices package will not work
+// as this requires the cmp.Ordered constraint.
+//
+// A better solution is to implement Set as a stripped down version of Map in the go
+// source code.
 package set
 
 import (

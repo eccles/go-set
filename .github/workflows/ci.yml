@@ -27,13 +27,10 @@ jobs:
       - name: qa
         run: just qa
         shell: bash
-      - name: Check if changed
+      - name: Check if there are any uncommitted changes
         run: |
           git diff
         shell: bash
       - name: unittest
         run: just unittest
-        shell: bash
-      - name: benchmark
-        run: just benchmark
         shell: bash

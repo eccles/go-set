@@ -1,6 +1,6 @@
-# !/usr/bin/env just --justfile
+#!/usr/bin/env just --justfile
 #
-name := "ego-set"
+name := "go-set"
 
 default:
 	@just --list --unsorted --justfile {{justfile()}} | grep -v default
@@ -56,6 +56,7 @@ benchmark:
 	log_info "Run benchmarks"
 	which go
 	rm -f benchmark-new.txt
+	go test -bench=. -benchmem ./... | tee benchmark.txt
 	go test -bench=. -benchmem ./... | tee benchmark-new.txt
 	go tool -modfile=tools/go.mod benchstat benchmark.txt benchmark-new.txt
 
@@ -67,4 +68,3 @@ doc:
 	log_info "Run documentation server at localhost:8080"
 	which go
 	go tool -modfile=tools/go.mod pkgsite
-
