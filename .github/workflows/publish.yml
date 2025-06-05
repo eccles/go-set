@@ -1,18 +1,15 @@
-name: ci
+name: publish
 on:
-  pull_request:
-    branches:
-      - main
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
 
 permissions:
   contents: write # to fetch code (actions/checkout)
 
 jobs:
-  QA:
-    name: Quality Assurance
+  Publish:
+    name: Publish package to golang proxy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,4 +29,7 @@ jobs:
         shell: bash
       - name: unittest
         run: just unittest
+        shell: bash
+      - name: publish
+        run: just publish
         shell: bash
