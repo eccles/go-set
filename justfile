@@ -68,3 +68,13 @@ doc:
 	log_info "Run documentation server at localhost:8080"
 	which go
 	go tool -modfile=tools/go.mod pkgsite
+
+# publish package to proxy
+publish:
+        #!/usr/bin/env bash
+        set -euo pipefail
+        source ./scripts/source/environment
+        log_info "Publish"
+        which go
+        VERSION=$(git tag -l | sort -r -V | head -1)
+        GOPROXY=proxy.golang.org go list -m github.com/eccles/go-set@${VERSION}
