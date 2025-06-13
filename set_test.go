@@ -21,7 +21,6 @@ func ExampleFromIter() {
 }
 
 func ExampleFromSlice() {
-
 	a := []string{"a", "b"}
 	s := set.FromSlice(a...)
 	fmt.Printf(
@@ -34,7 +33,6 @@ func ExampleFromSlice() {
 }
 
 func ExampleFromSlice_int() {
-
 	a := []int{1, 2}
 	s := set.FromSlice(a...)
 	fmt.Printf(
