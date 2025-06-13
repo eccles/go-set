@@ -15,8 +15,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup ASDF VM
         uses: asdf-vm/actions/install@v4
-        with:
-          asdf_version: 0.17.0
       - name: tools 
         run: just tools
         shell: bash
@@ -25,7 +23,7 @@ jobs:
         shell: bash
       - name: Check if there are any uncommitted changes
         run: |
-          git diff
+          git diff --exit-code
         shell: bash
       - name: unittest
         run: just unittest
