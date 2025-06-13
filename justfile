@@ -9,7 +9,7 @@ default:
 tools:
 	#!/usr/bin/env bash
 	set -euo pipefail
-	source ./scripts/source/environment
+	source ./scripts/source/log
 	log_info "Install go tools"
 	which go
 	go get -modfile=tools/go.mod -tool golang.org/x/tools/cmd/goimports
@@ -22,7 +22,7 @@ tools:
 qa:
 	#!/usr/bin/env bash
 	set -euo pipefail
-	source ./scripts/source/environment
+	source ./scripts/source/log
 	log_info "Check go.mod and lint code"
 	which go
 	go mod tidy
@@ -42,7 +42,7 @@ qa:
 unittest:
 	#!/usr/bin/env bash
 	set -euo pipefail
-	source ./scripts/source/environment
+	source ./scripts/source/log
 	log_info "Run unittests"
 	which go
 	go test -v -coverprofile=coverage.out ./...
@@ -52,11 +52,10 @@ unittest:
 benchmark:
 	#!/usr/bin/env bash
 	set -euo pipefail
-	source ./scripts/source/environment
+	source ./scripts/source/log
 	log_info "Run benchmarks"
 	which go
 	rm -f benchmark-new.txt
-	go test -bench=. -benchmem ./... | tee benchmark.txt
 	go test -bench=. -benchmem ./... | tee benchmark-new.txt
 	go tool -modfile=tools/go.mod benchstat benchmark.txt benchmark-new.txt
 
@@ -64,7 +63,7 @@ benchmark:
 doc:
 	#!/usr/bin/env bash
 	set -euo pipefail
-	source ./scripts/source/environment
+	source ./scripts/source/log
 	log_info "Run documentation server at localhost:8080"
 	which go
 	go tool -modfile=tools/go.mod pkgsite
@@ -73,7 +72,7 @@ doc:
 publish:
         #!/usr/bin/env bash
         set -euo pipefail
-        source ./scripts/source/environment
+        source ./scripts/source/log
         log_info "Publish"
         which go
         VERSION=$(git tag -l | sort -r -V | head -1)
