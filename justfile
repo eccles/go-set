@@ -12,10 +12,8 @@ tools:
 	source ./scripts/source/log
 	log_info "Install go tools"
 	which go
-	go get -modfile=tools/go.mod -tool golang.org/x/tools/cmd/goimports
 	go get -modfile=tools/go.mod -tool golang.org/x/pkgsite/cmd/pkgsite
 	go get -modfile=tools/go.mod -tool golang.org/x/perf/cmd/benchstat
-	go get -modfile=tools/go.mod -tool honnef.co/go/tools/cmd/staticcheck
 	go install -modfile=tools/go.mod tool
 
 # QA all code
@@ -28,13 +26,10 @@ qa:
 	go mod tidy
 	go mod verify
 	(cd tools && go mod tidy && go mod verify)
-	log_info "Format code"
-	go tool -modfile=tools/go.mod goimports -w .
-	gofmt -l -s -w $(find . -type f -name '*.go'| grep -v "/vendor/\|/.git/")
 	log_info "Vetting"
 	go vet ./...
-	log_info "Linting"
-	go tool -modfile=tools/go.mod staticcheck ./...
+	log_info "Linting and formatting"
+	golangci-lint run ./...
 	log_info "Vulnerability checking"
 	go run golang.org/x/vuln/cmd/govulncheck@latest --show verbose ./...
 
