@@ -112,8 +112,10 @@ func (s Set[T]) List() []T {
 }
 
 // Add adds one or more values to set.
-func (s Set[T]) Add(value T) {
-	s[value] = struct{}{}
+func (s Set[T]) Add(values ...T) {
+	for _, value := range values {
+		s[value] = struct{}{}
+	}
 }
 
 // Remove removes items from a set.

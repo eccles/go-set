@@ -5,6 +5,10 @@ import (
 	"testing"
 )
 
+// b.Loop is used but there may be some drawbacks:
+//
+// https://github.com/golang/go/issues/73137
+
 func BenchmarkFromSlice(b *testing.B) {
 	for b.Loop() {
 		FromSlice("a2", "a3", "a2", "a7")
@@ -14,10 +18,8 @@ func BenchmarkFromSlice(b *testing.B) {
 func BenchmarkAddRemove(b *testing.B) {
 	s := FromSlice("a2", "a3", "a2", "a7")
 	for b.Loop() {
-		s.Add("a3")
-		s.Add("a4")
-		s.Remove("a5")
-		s.Remove("a2")
+		s.Add("a3", "a4")
+		s.Remove("a5", "a6")
 	}
 }
 
