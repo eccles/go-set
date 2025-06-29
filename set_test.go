@@ -72,19 +72,20 @@ func ExampleSet_List() {
 
 func ExampleSet_Add() {
 	s := set.FromSlice("a")
-	s.Add("b")
+	s.Add("b", "c")
 	fmt.Printf(
-		"%d %t %t",
+		"%d %t %t %t",
 		len(s),
 		s.Contains("a"),
 		s.Contains("b"),
+		s.Contains("c"),
 	)
-	// Output: 2 true true
+	// Output: 3 true true true
 }
 
 func ExampleSet_Remove() {
-	s := set.FromSlice("a", "b")
-	s.Remove("b")
+	s := set.FromSlice("a", "b", "c")
+	s.Remove("b", "c")
 	fmt.Printf(
 		"%d %t",
 		len(s),
