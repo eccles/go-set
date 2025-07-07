@@ -200,7 +200,7 @@ func ExampleSet_Intersection() {
 	t := set.FromSlice(m...)
 	u := s.Intersection(t)
 	fmt.Printf("%v", u)
-	// Output: {c }
+	// Output: {c}
 }
 
 func ExampleSet_IntersectionIter() {
@@ -209,7 +209,7 @@ func ExampleSet_IntersectionIter() {
 	s := set.FromSlice(a...)
 	u := s.IntersectionIter(maps.Keys(m))
 	fmt.Printf("%v", u)
-	// Output: {c }
+	// Output: {c}
 }
 
 func ExampleSet_Difference() {

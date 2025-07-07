@@ -1,16 +1,16 @@
 goos: linux
 goarch: amd64
 pkg: github.com/eccles/go-set
-cpu: Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
-BenchmarkFromSlice-12                    	 7896730	       160.3 ns/op	     256 B/op	       2 allocs/op
-BenchmarkAddRemove-12                    	21634987	        51.22 ns/op	       0 B/op	       0 allocs/op
-BenchmarkRemove-12                       	100000000	        10.96 ns/op	       0 B/op	       0 allocs/op
-BenchmarkCreation-12                     	13407622	        92.07 ns/op	      48 B/op	       1 allocs/op
-BenchmarkIntersection-12                 	 5588613	       260.1 ns/op	     256 B/op	       2 allocs/op
-BenchmarkIntersectionIter-12             	 3857205	       334.4 ns/op	     312 B/op	       4 allocs/op
-BenchmarkUnion-12                        	 3138686	       362.3 ns/op	     256 B/op	       2 allocs/op
-BenchmarkUnionIter-12                    	 3701030	       401.4 ns/op	     296 B/op	       4 allocs/op
-BenchmarkDifference-12                   	 3880100	       274.7 ns/op	     256 B/op	       2 allocs/op
-BenchmarkSymmetricDifferenceString-12    	 2968902	       381.8 ns/op	     256 B/op	       2 allocs/op
+cpu: 12th Gen Intel(R) Core(TM) i7-1260P
+BenchmarkFromSlice-16                    	11908645	       104.3 ns/op	     256 B/op	       2 allocs/op
+BenchmarkAddRemove-16                    	39047284	        31.83 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRemove-16                       	159605016	         7.550 ns/op	       0 B/op	       0 allocs/op
+BenchmarkCreation-16                     	18956570	        60.98 ns/op	      48 B/op	       1 allocs/op
+BenchmarkIntersection-16                 	 8382294	       137.5 ns/op	     256 B/op	       2 allocs/op
+BenchmarkIntersectionIter-16             	 7876947	       150.4 ns/op	     312 B/op	       4 allocs/op
+BenchmarkUnion-16                        	 5821063	       203.8 ns/op	     256 B/op	       2 allocs/op
+BenchmarkUnionIter-16                    	 5886787	       206.2 ns/op	     296 B/op	       4 allocs/op
+BenchmarkDifference-16                   	 7513378	       164.4 ns/op	     256 B/op	       2 allocs/op
+BenchmarkSymmetricDifferenceString-16    	 4735290	       246.9 ns/op	     256 B/op	       2 allocs/op
 PASS
-ok  	github.com/eccles/go-set	12.278s
+ok  	github.com/eccles/go-set	11.995s
