@@ -57,7 +57,7 @@ type (
 // FromIter creates a new set from an iterator. This is useful for creating
 // a set from a map.
 func FromIter[T comparable](values iter.Seq[T]) Set[T] {
-	s := make(map[T]struct{})
+	s := make(Set[T])
 
 	if values != nil {
 		for value := range values {
@@ -70,7 +70,7 @@ func FromIter[T comparable](values iter.Seq[T]) Set[T] {
 
 // FromSlice creates a new set from a slice or array.
 func FromSlice[T comparable](values ...T) Set[T] {
-	s := make(map[T]struct{})
+	s := make(Set[T])
 
 	for _, value := range values {
 		s[value] = struct{}{}
@@ -84,9 +84,14 @@ func (s Set[T]) String() string {
 	var b strings.Builder
 
 	b.WriteString("{")
-
-	for k := range s {
-		fmt.Fprintf(&b, "%v ", k)
+	first := true
+	for value := range s {
+		if first {
+			fmt.Fprintf(&b, "%v", value)
+			first = false
+		} else {
+			fmt.Fprintf(&b, " %v", value)
+		}
 	}
 
 	b.WriteString("}")
@@ -127,21 +132,25 @@ func (s Set[T]) Remove(values ...T) {
 
 // Contains returns true if item is present in the set.
 func (s Set[T]) Contains(value T) bool {
-	_, c := s[value]
+	_, exists := s[value]
+	return exists
+}
 
-	return c
+// copy creates a shallow copy of the set.
+func (s Set[T]) copy() Set[T] {
+	result := make(Set[T], len(s))
+	for value := range s {
+		result[value] = struct{}{}
+	}
+	return result
 }
 
 // Union returns set that consists of items that are in either of the 2 sets.
 func (s Set[T]) Union(other Set[T]) Set[T] {
-	result := make(map[T]struct{})
+	result := s.copy()
 
-	for k := range s {
-		result[k] = struct{}{}
-	}
-
-	for k := range other {
-		result[k] = struct{}{}
+	for value := range other {
+		result[value] = struct{}{}
 	}
 
 	return result
@@ -150,14 +159,10 @@ func (s Set[T]) Union(other Set[T]) Set[T] {
 // UnionIter returns set that consists of items that are in either the set or
 // iterable.
 func (s Set[T]) UnionIter(values iter.Seq[T]) Set[T] {
-	result := make(map[T]struct{})
+	result := s.copy()
 
-	for k := range s {
-		result[k] = struct{}{}
-	}
-
-	for k := range values {
-		result[k] = struct{}{}
+	for value := range values {
+		result[value] = struct{}{}
 	}
 
 	return result
@@ -165,11 +170,11 @@ func (s Set[T]) UnionIter(values iter.Seq[T]) Set[T] {
 
 // Intersection returns set that consists of items that are in both sets.
 func (s Set[T]) Intersection(other Set[T]) Set[T] {
-	result := make(map[T]struct{})
+	result := make(Set[T])
 
-	for k := range other {
-		if s.Contains(k) {
-			result[k] = struct{}{}
+	for value := range other {
+		if s.Contains(value) {
+			result[value] = struct{}{}
 		}
 	}
 
@@ -179,11 +184,11 @@ func (s Set[T]) Intersection(other Set[T]) Set[T] {
 // IntersectionIter returns set that consists of items that are in both set
 // and iterable.
 func (s Set[T]) IntersectionIter(values iter.Seq[T]) Set[T] {
-	result := make(map[T]struct{})
+	result := make(Set[T])
 
-	for k := range values {
-		if s.Contains(k) {
-			result[k] = struct{}{}
+	for value := range values {
+		if s.Contains(value) {
+			result[value] = struct{}{}
 		}
 	}
 
@@ -193,11 +198,11 @@ func (s Set[T]) IntersectionIter(values iter.Seq[T]) Set[T] {
 // Difference returns set that consists of items that are in first set and
 // not in second set.
 func (s Set[T]) Difference(other Set[T]) Set[T] {
-	result := make(map[T]struct{})
+	result := make(Set[T])
 
-	for k := range s {
-		if !other.Contains(k) {
-			result[k] = struct{}{}
+	for value := range s {
+		if !other.Contains(value) {
+			result[value] = struct{}{}
 		}
 	}
 
@@ -207,17 +212,17 @@ func (s Set[T]) Difference(other Set[T]) Set[T] {
 // SymmetricDifference returns set that consists of items that are in each set
 // but not in both sets.
 func (s Set[T]) SymmetricDifference(other Set[T]) Set[T] {
-	result := make(map[T]struct{})
+	result := make(Set[T])
 
-	for k := range s {
-		if !other.Contains(k) {
-			result[k] = struct{}{}
+	for value := range s {
+		if !other.Contains(value) {
+			result[value] = struct{}{}
 		}
 	}
 
-	for k := range other {
-		if !s.Contains(k) {
-			result[k] = struct{}{}
+	for value := range other {
+		if !s.Contains(value) {
+			result[value] = struct{}{}
 		}
 	}
 
