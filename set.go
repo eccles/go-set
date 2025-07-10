@@ -39,7 +39,13 @@
 // as this requires the cmp.Ordered constraint.
 //
 // A better solution is to implement Set as a stripped down version of Map in the go
-// source code.
+// source code perhaps.
+//
+// For a deep discussion of generics see the blog by Axel Wagner
+//
+//	https://go.dev/blog/generic-interfaces
+//
+// For now resist the temptation to convert this package into something more complicated.
 package set
 
 import (
