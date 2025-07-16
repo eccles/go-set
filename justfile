@@ -5,17 +5,6 @@ name := "go-set"
 default:
 	@just --list --unsorted --justfile {{justfile()}} | grep -v default
 
-# Install grpc plugins and other go tools
-tools:
-	#!/usr/bin/env bash
-	set -euo pipefail
-	source ./scripts/source/log
-	log_info "Install go tools"
-	which go
-	go get -modfile=tools/go.mod -tool golang.org/x/pkgsite/cmd/pkgsite
-	go get -modfile=tools/go.mod -tool golang.org/x/perf/cmd/benchstat
-	go install -modfile=tools/go.mod tool
-
 # QA all code
 qa:
 	#!/usr/bin/env bash
@@ -25,7 +14,6 @@ qa:
 	which go
 	go mod tidy
 	go mod verify
-	(cd tools && go mod tidy && go mod verify)
 	log_info "Vetting"
 	go vet ./...
 	log_info "Formatting"
@@ -53,8 +41,8 @@ benchmark:
 	log_info "Run benchmarks"
 	which go
 	rm -f benchmark-new.txt
-	go test -bench=. -benchmem ./... | tee benchmark-new.txt
-	go tool -modfile=tools/go.mod benchstat benchmark.txt benchmark-new.txt
+	go test -run='^$' -count=10 -bench=. -benchmem ./... | tee benchmark-new.txt
+	go run golang.org/x/perf/cmd/benchstat@latest benchmark.txt benchmark-new.txt
 
 # generate documentation server
 doc:
@@ -63,7 +51,7 @@ doc:
 	source ./scripts/source/log
 	log_info "Run documentation server at localhost:8080"
 	which go
-	go tool -modfile=tools/go.mod pkgsite
+	go run golang.org/x/pkgsite/cmd/pkgsite@latest
 
 # publish package to proxy
 publish:
