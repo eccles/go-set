@@ -15,9 +15,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup ASDF VM
         uses: asdf-vm/actions/install@v4
-      - name: tools 
-        run: just tools
-        shell: bash
       - name: qa
         run: just qa
         shell: bash
