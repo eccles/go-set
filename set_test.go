@@ -64,6 +64,18 @@ func ExampleFromSlice_struct() {
 	// Output: 2 true true
 }
 
+func ExampleSet_String() {
+	s := set.FromSlice("a", "b")
+	fmt.Printf("%v", s)
+	// Output: {a b}
+}
+
+func ExampleSet_String_nil() {
+	var s set.Set[int]
+	fmt.Printf("%v", s)
+	// Output: {}
+}
+
 func ExampleSet_List() {
 	s := set.FromSlice("a")
 	fmt.Printf("%v", s.List())

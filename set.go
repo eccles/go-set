@@ -52,6 +52,7 @@ import (
 	"fmt"
 	"iter"
 	"maps"
+	"slices"
 	"strings"
 )
 
@@ -76,7 +77,7 @@ func FromIter[T comparable](values iter.Seq[T]) Set[T] {
 
 // FromSlice creates a new set from a slice or array.
 func FromSlice[T comparable](values ...T) Set[T] {
-	s := make(Set[T])
+	s := make(Set[T], len(values))
 
 	for _, value := range values {
 		s[value] = struct{}{}
@@ -87,6 +88,9 @@ func FromSlice[T comparable](values ...T) Set[T] {
 
 // String returns a string representation of a set.
 func (s Set[T]) String() string {
+	if s == nil {
+		return "{}"
+	}
 	var b strings.Builder
 
 	b.WriteString("{")
@@ -113,13 +117,7 @@ func (s Set[T]) Iter() iter.Seq[T] {
 // List returns the set as the original array.
 // Order is not preserved.
 func (s Set[T]) List() []T {
-	result := make([]T, 0, len(s))
-
-	for value := range s {
-		result = append(result, value)
-	}
-
-	return result
+	return slices.Collect(s.Iter())
 }
 
 // Add adds one or more values to set.
@@ -144,11 +142,7 @@ func (s Set[T]) Contains(value T) bool {
 
 // copy creates a shallow copy of the set.
 func (s Set[T]) copy() Set[T] {
-	result := make(Set[T], len(s))
-	for value := range s {
-		result[value] = struct{}{}
-	}
-	return result
+	return maps.Clone(s)
 }
 
 // Union returns set that consists of items that are in either of the 2 sets.
