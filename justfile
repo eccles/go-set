@@ -10,6 +10,7 @@ qa:
 	#!/usr/bin/env bash
 	set -euo pipefail
 	source ./scripts/source/log
+	source ./scripts/source/environment
 	log_info "Check go.mod and lint code"
 	which go
 	go mod tidy
@@ -28,6 +29,7 @@ unittest:
 	#!/usr/bin/env bash
 	set -euo pipefail
 	source ./scripts/source/log
+	source ./scripts/source/environment
 	log_info "Run unittests"
 	which go
 	go test -v -coverprofile=coverage.out ./...
@@ -38,6 +40,7 @@ benchmark:
 	#!/usr/bin/env bash
 	set -euo pipefail
 	source ./scripts/source/log
+	source ./scripts/source/environment
 	log_info "Run benchmarks"
 	which go
 	rm -f benchmark-new.txt
@@ -49,16 +52,18 @@ doc:
 	#!/usr/bin/env bash
 	set -euo pipefail
 	source ./scripts/source/log
+	source ./scripts/source/environment
 	log_info "Run documentation server at localhost:8080"
 	which go
 	go run golang.org/x/pkgsite/cmd/pkgsite@latest
 
 # publish package to proxy
 publish:
-        #!/usr/bin/env bash
-        set -euo pipefail
-        source ./scripts/source/log
-        log_info "Publish"
-        which go
-        VERSION=$(git tag -l | sort -r -V | head -1)
-        GOPROXY=proxy.golang.org go list -m github.com/eccles/go-set@${VERSION}
+	#!/usr/bin/env bash
+	set -euo pipefail
+	source ./scripts/source/log
+	source ./scripts/source/environment
+	log_info "Publish"
+	which go
+	VERSION=$(git tag -l | sort -r -V | head -1)
+	GOPROXY=proxy.golang.org go list -m github.com/eccles/go-set@${VERSION}
