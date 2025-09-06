@@ -1,23 +1,21 @@
 # Development environment
 
-This repo uses just as a 'make' replacement.
+This repo uses 'just' as a 'make' replacement.
 
-Install go tools:
-
-```bash
-just tools
-```
+Versions of tools used are in the .tool-versions file.
 
 # Development workflow
 
-## On a rebase
+## Tools
 
-Initialise tools and modules
+As an example upgrade golang:
 
 ```bash
-just tools
-just qa
+asdf install golang latest
 ```
+
+If successful, edit .tool-versions accordingly.
+
 ## Changing code
 
 Edit or add code or other development activity.
