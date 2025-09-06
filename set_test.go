@@ -3,6 +3,7 @@ package set_test
 import (
 	"fmt"
 	"maps"
+	"regexp"
 	"slices"
 
 	"github.com/eccles/go-set"
@@ -66,8 +67,10 @@ func ExampleFromSlice_struct() {
 
 func ExampleSet_String() {
 	s := set.FromSlice("a", "b")
-	fmt.Printf("%v", s)
-	// Output: {a b}
+	name := s.String()
+	re := regexp.MustCompile(`^({a b}|{b a})$`)
+	fmt.Println(re.Match([]byte(name)))
+	// Output: true
 }
 
 func ExampleSet_String_nil() {
@@ -77,9 +80,11 @@ func ExampleSet_String_nil() {
 }
 
 func ExampleSet_List() {
-	s := set.FromSlice("a")
-	fmt.Printf("%v", s.List())
-	// Output: [a]
+	s := set.FromSlice("a", "b")
+	name := fmt.Sprintf("%v", s.List())
+	re := regexp.MustCompile(`^(\[a b\]|\[b a\])$`)
+	fmt.Println(re.Match([]byte(name)))
+	// Output: true
 }
 
 func ExampleSet_Add() {
@@ -99,11 +104,13 @@ func ExampleSet_Remove() {
 	s := set.FromSlice("a", "b", "c")
 	s.Remove("b", "c")
 	fmt.Printf(
-		"%d %t",
+		"%d %t %t %t",
 		len(s),
 		s.Contains("a"),
+		s.Contains("b"),
+		s.Contains("c"),
 	)
-	// Output: 1 true
+	// Output: 1 true false false
 }
 
 func ExampleSet_Iter() {
@@ -231,12 +238,15 @@ func ExampleSet_Difference() {
 	t := set.FromSlice(m...)
 	u := s.Difference(t)
 	fmt.Printf(
-		"%d %t %t",
+		"%d %t %t %t %t %t",
 		len(u),
 		u.Contains("a"),
 		u.Contains("b"),
+		u.Contains("c"),
+		u.Contains("d"),
+		u.Contains("e"),
 	)
-	// Output: 2 true true
+	// Output: 2 true true false false false
 }
 
 func ExampleSet_SymmetricDifference() {
@@ -246,12 +256,13 @@ func ExampleSet_SymmetricDifference() {
 	t := set.FromSlice(m...)
 	u := s.SymmetricDifference(t)
 	fmt.Printf(
-		"%d %t %t %t %t",
+		"%d %t %t %t %t %t",
 		len(u),
 		u.Contains("a"),
 		u.Contains("b"),
+		u.Contains("c"),
 		u.Contains("d"),
 		u.Contains("e"),
 	)
-	// Output: 4 true true true true
+	// Output: 4 true true false true true
 }
