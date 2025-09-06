@@ -12,7 +12,7 @@ jobs:
     name: Publish package to golang proxy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup ASDF VM
         uses: asdf-vm/actions/install@v4
       - name: qa
