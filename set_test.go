@@ -65,6 +65,90 @@ func ExampleFromSlice_struct() {
 	// Output: 2 true true
 }
 
+func ExampleSet_Equal() {
+	a := []int{1, 2}
+	b := []int{1, 2}
+	s := set.FromSlice(a...)
+	t := set.FromSlice(b...)
+	fmt.Printf(
+		"%t",
+		s.Equal(t),
+	)
+	// Output: true
+}
+
+func ExampleSet_Equal_not() {
+	a := []int{1, 2}
+	b := []int{1, 3}
+	s := set.FromSlice(a...)
+	t := set.FromSlice(b...)
+	fmt.Printf(
+		"%t",
+		s.Equal(t),
+	)
+	// Output: false
+}
+
+func ExampleSet_Equal_wronglength() {
+	a := []int{1, 2}
+	b := []int{1, 2, 3}
+	s := set.FromSlice(a...)
+	t := set.FromSlice(b...)
+	fmt.Printf(
+		"%t",
+		s.Equal(t),
+	)
+	// Output: false
+}
+
+func ExampleSet_Sub() {
+	a := []int{1, 2}
+	b := []int{1, 2}
+	s := set.FromSlice(a...)
+	t := set.FromSlice(b...)
+	fmt.Printf(
+		"%t",
+		s.Sub(t),
+	)
+	// Output: true
+}
+
+func ExampleSet_Sub_larger() {
+	a := []int{1, 2, 3}
+	b := []int{1, 2}
+	s := set.FromSlice(a...)
+	t := set.FromSlice(b...)
+	fmt.Printf(
+		"%t",
+		s.Sub(t),
+	)
+	// Output: true
+}
+
+func ExampleSet_Sub_smaller() {
+	a := []int{1, 2}
+	b := []int{1, 2, 3}
+	s := set.FromSlice(a...)
+	t := set.FromSlice(b...)
+	fmt.Printf(
+		"%t",
+		s.Sub(t),
+	)
+	// Output: false
+}
+
+func ExampleSet_Sub_not() {
+	a := []int{1, 2, 3}
+	b := []int{1, 4}
+	s := set.FromSlice(a...)
+	t := set.FromSlice(b...)
+	fmt.Printf(
+		"%t",
+		s.Sub(t),
+	)
+	// Output: false
+}
+
 func ExampleSet_String() {
 	s := set.FromSlice("a", "b")
 	name := s.String()

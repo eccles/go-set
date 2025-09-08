@@ -57,18 +57,18 @@ import (
 )
 
 type (
-	// Set is a synonym of a map.
+	// Set is a synonym of a map with no values.
 	Set[T comparable] map[T]struct{}
 )
 
 // FromIter creates a new set from an iterator. This is useful for creating
 // a set from a map.
-func FromIter[T comparable](values iter.Seq[T]) Set[T] {
+func FromIter[T comparable](items iter.Seq[T]) Set[T] {
 	s := make(Set[T])
 
-	if values != nil {
-		for value := range values {
-			s[value] = struct{}{}
+	if items != nil {
+		for item := range items {
+			s[item] = struct{}{}
 		}
 	}
 
@@ -76,14 +76,27 @@ func FromIter[T comparable](values iter.Seq[T]) Set[T] {
 }
 
 // FromSlice creates a new set from a slice or array.
-func FromSlice[T comparable](values ...T) Set[T] {
-	s := make(Set[T], len(values))
+func FromSlice[T comparable](items ...T) Set[T] {
+	s := make(Set[T], len(items))
 
-	for _, value := range values {
-		s[value] = struct{}{}
+	for _, item := range items {
+		s[item] = struct{}{}
 	}
 
 	return s
+}
+
+// Equal reports whether two sets contain the same items.
+func Equal[S Set[T], T comparable](s1 S, s2 S) bool {
+	if len(s1) != len(s2) {
+		return false
+	}
+	for k := range s1 {
+		if _, ok := s2[k]; !ok {
+			return false
+		}
+	}
+	return true
 }
 
 // String returns a string representation of a set.
@@ -95,12 +108,12 @@ func (s Set[T]) String() string {
 
 	b.WriteString("{")
 	first := true
-	for value := range s {
+	for item := range s {
 		if first {
-			fmt.Fprintf(&b, "%v", value)
+			fmt.Fprintf(&b, "%v", item)
 			first = false
 		} else {
-			fmt.Fprintf(&b, " %v", value)
+			fmt.Fprintf(&b, " %v", item)
 		}
 	}
 
@@ -120,24 +133,29 @@ func (s Set[T]) List() []T {
 	return slices.Collect(s.Iter())
 }
 
-// Add adds one or more values to set.
-func (s Set[T]) Add(values ...T) {
-	for _, value := range values {
-		s[value] = struct{}{}
+// Add adds one or more items to set.
+func (s Set[T]) Add(items ...T) {
+	for _, item := range items {
+		s[item] = struct{}{}
 	}
 }
 
 // Remove removes items from a set.
-func (s Set[T]) Remove(values ...T) {
-	for _, value := range values {
-		delete(s, value)
+func (s Set[T]) Remove(items ...T) {
+	for _, item := range items {
+		delete(s, item)
 	}
 }
 
 // Contains returns true if item is present in the set.
-func (s Set[T]) Contains(value T) bool {
-	_, exists := s[value]
+func (s Set[T]) Contains(item T) bool {
+	_, exists := s[item]
 	return exists
+}
+
+// Equal returns true sets are equal.
+func (s Set[T]) Equal(other Set[T]) bool {
+	return Equal(s, other)
 }
 
 // copy creates a shallow copy of the set.
@@ -145,12 +163,25 @@ func (s Set[T]) copy() Set[T] {
 	return maps.Clone(s)
 }
 
+// Sub returns true if other is a subset of set.
+func (s Set[T]) Sub(other Set[T]) bool {
+	if len(s) < len(other) {
+		return false
+	}
+	for k := range other {
+		if _, ok := s[k]; !ok {
+			return false
+		}
+	}
+	return true
+}
+
 // Union returns set that consists of items that are in either of the 2 sets.
 func (s Set[T]) Union(other Set[T]) Set[T] {
 	result := s.copy()
 
-	for value := range other {
-		result[value] = struct{}{}
+	for item := range other {
+		result[item] = struct{}{}
 	}
 
 	return result
@@ -158,11 +189,11 @@ func (s Set[T]) Union(other Set[T]) Set[T] {
 
 // UnionIter returns set that consists of items that are in either the set or
 // iterable.
-func (s Set[T]) UnionIter(values iter.Seq[T]) Set[T] {
+func (s Set[T]) UnionIter(items iter.Seq[T]) Set[T] {
 	result := s.copy()
 
-	for value := range values {
-		result[value] = struct{}{}
+	for item := range items {
+		result[item] = struct{}{}
 	}
 
 	return result
@@ -172,9 +203,9 @@ func (s Set[T]) UnionIter(values iter.Seq[T]) Set[T] {
 func (s Set[T]) Intersection(other Set[T]) Set[T] {
 	result := make(Set[T])
 
-	for value := range other {
-		if s.Contains(value) {
-			result[value] = struct{}{}
+	for item := range other {
+		if s.Contains(item) {
+			result[item] = struct{}{}
 		}
 	}
 
@@ -183,12 +214,12 @@ func (s Set[T]) Intersection(other Set[T]) Set[T] {
 
 // IntersectionIter returns set that consists of items that are in both set
 // and iterable.
-func (s Set[T]) IntersectionIter(values iter.Seq[T]) Set[T] {
+func (s Set[T]) IntersectionIter(items iter.Seq[T]) Set[T] {
 	result := make(Set[T])
 
-	for value := range values {
-		if s.Contains(value) {
-			result[value] = struct{}{}
+	for item := range items {
+		if s.Contains(item) {
+			result[item] = struct{}{}
 		}
 	}
 
@@ -200,9 +231,9 @@ func (s Set[T]) IntersectionIter(values iter.Seq[T]) Set[T] {
 func (s Set[T]) Difference(other Set[T]) Set[T] {
 	result := make(Set[T])
 
-	for value := range s {
-		if !other.Contains(value) {
-			result[value] = struct{}{}
+	for item := range s {
+		if !other.Contains(item) {
+			result[item] = struct{}{}
 		}
 	}
 
@@ -214,15 +245,15 @@ func (s Set[T]) Difference(other Set[T]) Set[T] {
 func (s Set[T]) SymmetricDifference(other Set[T]) Set[T] {
 	result := make(Set[T])
 
-	for value := range s {
-		if !other.Contains(value) {
-			result[value] = struct{}{}
+	for item := range s {
+		if !other.Contains(item) {
+			result[item] = struct{}{}
 		}
 	}
 
-	for value := range other {
-		if !s.Contains(value) {
-			result[value] = struct{}{}
+	for item := range other {
+		if !s.Contains(item) {
+			result[item] = struct{}{}
 		}
 	}
 
