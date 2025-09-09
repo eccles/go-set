@@ -22,12 +22,11 @@
 // iterator. The implementation avoids allocations where possible.
 //
 // Unlike python, sets can only consist of comparable types. This eliminates the
-// possibility of a 'set of sets'. The API is stable.
+// possibility of a 'set of sets'.
 //
 // Similarly to map, sets are not goroutine safe.
 //
 // This is not production code but simply a demonstration of generics and iterators.
-// Do not import.
 //
 // [Python Set]: https://docs.python.org/3/library/stdtypes.html#set-types-set-frozenset
 // Frozenset is NOT supported although it would be possible.
@@ -38,14 +37,41 @@
 // Attempting to sort a set using slices.Sort from the go slices package will not work
 // as this requires the cmp.Ordered constraint.
 //
-// A better solution is to implement Set as a stripped down version of Map in the go
+// A better solution is to implement 'set' as a stripped down version of 'map' in the go
 // source code perhaps.
 //
 // For a deep discussion of generics see the blog by Axel Wagner
 //
 //	https://go.dev/blog/generic-interfaces
 //
-// For now resist the temptation to convert this package into something more complicated.
+// It is tempting to change the comparable constraint to a constraint that EITHER requires
+// 'comparable' OR the presence of an Equal method - something like this:
+//
+//	type Comparer[T any] interface {
+//		Equal(T) bool
+//	}
+//
+//	type Comparable[T any] interface {
+//		constraint | Comparer[T]
+//	}
+//
+// but this will not compile as 'constraint' is disallowed from forming part of a constraint union.
+//
+// To fix this the various types that make up 'constraint' must be explicitly enumerated in the
+// Comparable type. This is fragile as this may change in subsequent Go versions.
+//
+// Ref: https://go.dev/blog/comparable
+//
+// An alternative would be to use:
+//
+//	type Comparable[T any] interface {
+//		constraint
+//		Comparer[T]
+//	}
+//
+// but this makes generic types such as 'string' or 'int' fail because they have no Equal method.
+//
+// To reiterate the only real solution is to add 'set' as a proper type in the golang source tree.
 package set
 
 import (
@@ -86,7 +112,7 @@ func FromSlice[T comparable](items ...T) Set[T] {
 	return s
 }
 
-// Equal reports whether two sets contain the same items.
+// Equal returns true if two sets contain the same items.
 func Equal[S Set[T], T comparable](s1 S, s2 S) bool {
 	if len(s1) != len(s2) {
 		return false
@@ -153,7 +179,7 @@ func (s Set[T]) Contains(item T) bool {
 	return exists
 }
 
-// Equal returns true sets are equal.
+// Equal returns true if sets are equal.
 func (s Set[T]) Equal(other Set[T]) bool {
 	return Equal(s, other)
 }
