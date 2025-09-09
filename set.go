@@ -52,12 +52,12 @@
 //	}
 //
 //	type Comparable[T any] interface {
-//		constraint | Comparer[T]
+//		comparable | Comparer[T]
 //	}
 //
-// but this will not compile as 'constraint' is disallowed from forming part of a constraint union.
+// but this will not compile as 'comparable' is disallowed from forming part of a constraint union.
 //
-// To fix this the various types that make up 'constraint' must be explicitly enumerated in the
+// To fix this the various types that make up 'comparable' must be explicitly enumerated in the
 // Comparable type. This is fragile as this may change in subsequent Go versions.
 //
 // Ref: https://go.dev/blog/comparable
@@ -65,7 +65,7 @@
 // An alternative would be to use:
 //
 //	type Comparable[T any] interface {
-//		constraint
+//		comparable
 //		Comparer[T]
 //	}
 //
