@@ -60,6 +60,17 @@
 // To fix this the various types that make up 'comparable' must be explicitly enumerated in the
 // Comparable type. This is fragile as this may change in subsequent Go versions.
 //
+//	type Comparable[T any] interface {
+//		~int | ~int8 | ~int16 | ~int32 | ~int64 |
+//		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
+//		~float32 | ~float64 |
+//		~string | Comparer[T]
+//	}
+//
+// and it is unclear how to generalise this to (say) structs and pointers of any type.
+//
+// Ref: https://github.com/golang/go/issues/51259
+//
 // Ref: https://go.dev/blog/comparable
 //
 // An alternative would be to use:
